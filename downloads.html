@@ -193,21 +193,27 @@
             <div class="troubleshoot-container">
                 <div class="troubleshoot-card">
                     <div class="troubleshoot-item">
-                        <h4>"Unidentified Developer" Warning</h4>
+                        <h4>"App is damaged" or "Unidentified Developer"</h4>
                         <p>
-                            Because SpotDock is a new, independent app, macOS may block the first launch. To fix this:
+                            Since SpotDock is not yet code-signed by Apple, you may see a warning. This is normal for independent software.
                             <br><br>
-                            1. Open <b>System Settings</b>.<br>
-                            2. Navigate to <b>Privacy & Security</b>.<br>
-                            3. Scroll down to the <b>Security</b> section.<br>
-                            4. Click <b>"Open Anyway"</b> next to the SpotDock notice.
+                            <b>The Fix:</b> Right-click (or Control-click) the SpotDock app in your Applications folder and select <b>Open</b>. In the dialog that appears, click <b>Open</b> again. You only need to do this once.
                         </p>
                     </div>
                     <div class="troubleshoot-item">
-                        <h4>Permissions & Spotify</h4>
+                        <h4>Privacy Policy & Permissions</h4>
                         <p>
-                            SpotDock needs <b>Accessibility</b> and <b>Automation</b> permissions to control Spotify. You will be prompted on first launch—please click "Allow". 
-                            If it's not working, ensure you're using the <b>Spotify Desktop App</b> (not the web player).
+                            To control your music, SpotDock requires <b>Automation</b> and <b>Accessibility</b> permissions. 
+                            <br><br>
+                            1. Go to <b>System Settings > Privacy & Security</b>.<br>
+                            2. Under <b>Automation</b>, ensure SpotDock is allowed to control Spotify.<br>
+                            3. Under <b>Accessibility</b>, ensure SpotDock is toggled ON.
+                        </p>
+                    </div>
+                    <div class="troubleshoot-item">
+                        <h4>Still having issues?</h4>
+                        <p>
+                            Make sure you are using the official <b>Spotify Desktop App</b>. SpotDock cannot control the Spotify web player or mobile versions.
                         </p>
                     </div>
                 </div>
@@ -227,19 +233,11 @@
 
     <script>
         function showTab(tabId) {
-            // Hide all content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            // Deactivate all buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                content.classList.remove('active'); // Correction below
-            });
-            
-            // Corrected Script
+            // Hide all tabs and deactivate buttons
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
+            // Show selected tab and activate button
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }

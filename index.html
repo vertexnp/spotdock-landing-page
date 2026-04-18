@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpotDock — Native Music Control for Spotify</title>
-    <link rel="icon" type="image/png" href="./logo.png">
+    <link rel="icon" type="image/png" href="./logo_white.png">
     <style>
         :root {
             --bg: #ffffff;
@@ -40,11 +40,29 @@
         .nav-links a:hover { opacity: 1; }
 
         /* Hero */
-        .hero { padding-top: 100px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .hero { padding-top: 40px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .hero-logo {
+            width: 84px;
+            height: 84px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 10;
+        }
+        .hero-title {
+            font-size: clamp(40px, 8vw, 84px);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            max-width: 900px;
+            padding: 0 20px;
+            margin-bottom: 10px;
+        }
         .download-btn {
             display: inline-block; background: #0071e3; color: #fff; padding: 12px 24px; border-radius: 980px;
             font-weight: 400; font-size: 17px; text-decoration: none; transition: background 0.2s;
             margin-bottom: 60px;
+            position: relative;
+            z-index: 5;
         }
         .download-btn:hover { background: #0077ed; }
 
@@ -70,8 +88,8 @@
             box-shadow: 0 40px 100px rgba(0,0,0,0.15);
             overflow: hidden;
             transform-origin: bottom;
-            transform: rotateX(-65deg);
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: rotateX(0deg);
+            transition: transform 0.1s linear, opacity 0.1s linear;
             backface-visibility: hidden;
         }
         .mac-display::after {
@@ -82,6 +100,41 @@
             opacity: 1;
             z-index: 1;
         }
+
+        /* Notch Song Info */
+        .notch-music-mini {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            padding: 0 4px;
+        }
+        .notch-mini-art {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            background: url('./album_art.jpg') center/cover;
+        }
+        .notch-mini-bars {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 12px;
+        }
+        .nm-bar {
+            width: 2px;
+            background: #ff2d55; /* Pink bars like the image */
+            border-radius: 1px;
+            animation: nm-wave 1s ease-in-out infinite;
+        }
+        @keyframes nm-wave { 
+            0%, 100% { height: 3px; } 
+            50% { height: 10px; } 
+        }
+        .nm-bar:nth-child(2) { animation-delay: 0.1s; }
+        .nm-bar:nth-child(3) { animation-delay: 0.2s; }
+        .nm-bar:nth-child(4) { animation-delay: 0.3s; }
         .mac-keyboard {
             width: 90%;
             max-width: 1080px;
@@ -141,24 +194,62 @@
         .sq-btn:hover { background: rgba(0,0,0,0.08); }
         .sq-btn.play { flex: 1.2; background: #1d1d1f; color: white; height: 38px; }
 
-        /* Notch */
-        .notch-top { width: 180px; height: 28px; background: #000; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 250; display: flex; align-items: flex-start; justify-content: space-between; padding: 6px 12px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; overflow: hidden; }
-        .notch-top.expanded { width: 360px; height: 160px; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px; padding: 20px; flex-direction: column; }
-        .notch-top::before, .notch-top::after { content: ''; position: absolute; top: 0; width: 16px; height: 16px; }
-        .notch-top::before { left: -16px; border-top-right-radius: 16px; box-shadow: 4px -4px 0 0 #000; }
-        .notch-top::after { right: -16px; border-top-left-radius: 16px; box-shadow: -4px -4px 0 0 #000; }
-        .notch-mini-content { display: flex; align-items: center; justify-content: space-between; width: 100%; transition: opacity 0.2s; }
-        .notch-top.expanded .notch-mini-content { opacity: 0; pointer-events: none; height: 0; }
-        .notch-mini-art { width: 16px; height: 16px; background: url('./album_art.jpg') center/cover; border-radius: 3px; }
-        .notch-mini-bars { display: flex; gap: 2px; align-items: flex-end; height: 12px; }
-        .nm-bar { width: 2px; background: #1DB954; border-radius: 1px; animation: nm-wave 1s ease-in-out infinite; }
-        @keyframes nm-wave { 0%, 100% { height: 3px; } 50% { height: 10px; } }
-        .nm-bar:nth-child(2) { animation-delay: 0.1s; }
-        .nm-bar:nth-child(3) { animation-delay: 0.2s; }
-        .nm-bar:nth-child(4) { animation-delay: 0.3s; }
+        /* Liquid Notch Geometry - Refined */
+        .notch-top { 
+            width: 180px; 
+            height: 30.5px; 
+            background: #000; 
+            position: absolute; 
+            top: -6px; left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 250; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 20px; /* Padding accommodates wings */
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+            overflow: hidden;
+            clip-path: url(#notch-clip);
+        }
         
-        .notch-expanded-content { display: none; width: 100%; height: 100%; flex-direction: column; opacity: 0; transition: opacity 0.3s; color: #fff; }
-        .notch-top.expanded .notch-expanded-content { display: flex; opacity: 1; }
+        .notch-top.expanded { 
+            width: 300px; 
+            height: 180px; 
+            padding: 24px 30px;
+        }
+
+        .notch-mini-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            width: 100%; 
+            height: 18px; /* Fixed height for mini content */
+            transition: opacity 0.3s, transform 0.3s; 
+        }
+        
+        .notch-top.expanded .notch-mini-content { 
+            opacity: 0; 
+            transform: scale(0.9);
+            pointer-events: none; 
+            height: 0; 
+            margin: 0;
+        }
+
+        .notch-expanded-content { 
+            display: none; 
+            width: 100%; 
+            flex-direction: column; 
+            opacity: 0; 
+  
+            transition: opacity 0.4s ease;
+            color: #fff; 
+        }
+        
+        .notch-top.expanded .notch-expanded-content { 
+            display: flex; 
+            opacity: 1; 
+        }
         .ne-top { display: flex; align-items: center; gap: 12px; }
         .ne-art { width: 50px; height: 50px; border-radius: 10px; background: url('./album_art.jpg') center/cover; }
         .ne-info { flex: 1; text-align: left;}
@@ -208,6 +299,41 @@
         }
         .span-large .card-video { width: 92%; }
 
+        /* Troubleshooting Section */
+        .troubleshoot {
+            max-width: 1024px;
+            margin: 0 auto 120px;
+            padding: 0 22px;
+        }
+        .troubleshoot h2 {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        .faq-item {
+            background: #f5f5f7;
+            padding: 32px;
+            border-radius: 24px;
+        }
+        .faq-item h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+        }
+        .faq-item p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #6e6e73;
+        }
+
         footer { padding: 80px 22px; text-align: left; border-top: 0.5px solid var(--border); background: #f5f5f7; }
         footer .footer-inner { max-width: 1024px; margin: 0 auto; }
         footer .logo-bottom { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
@@ -216,6 +342,8 @@
         @media (max-width: 800px) {
             .apple-grid { grid-template-columns: 1fr; }
             .apple-card.span-large { grid-column: span 1; }
+            .faq-grid { grid-template-columns: 1fr; gap: 20px; }
+            .troubleshoot h2 { font-size: 32px; margin-bottom: 40px; }
             .mac-display { width: 95%; transform: rotateX(0deg) !important; border-radius: 24px 24px 0 0; }
             .mac-keyboard { width: 100%; border-radius: 0 0 24px 24px; }
             .menu-app-v2, .mini-player-v2, .notch-top { display: none; }
@@ -240,14 +368,32 @@
     </nav>
 
     <section class="hero">
+        <!-- SVG for Liquid Notch Path -->
+        <svg class="notch-svg-container">
+            <defs>
+                <clipPath id="notch-clip" clipPathUnits="objectBoundingBox">
+                    <path id="notch-path" d="M 0 0 L 1 0 L 1 0.2 Q 1 0.5 0.9 0.5 L 0.1 0.5 Q 0 0.5 0 0.2 Z"></path>
+                </clipPath>
+            </defs>
+        </svg>
+
+        <img src="./logo.png" class="hero-logo">
+        <h1 class="hero-title">Get your music controlled from any where</h1>
         <a href="downloads.html" class="download-btn">Download for macOS</a>
 
         <div class="mac-wrapper">
             <div class="mac-display">
                 <div class="notch-top" id="notch">
                     <div class="notch-mini-content">
-                        <div class="notch-mini-art"></div>
-                        <div class="notch-mini-bars"><div class="nm-bar"></div><div class="nm-bar"></div><div class="nm-bar"></div><div class="nm-bar"></div></div>
+                        <div class="notch-music-mini">
+                            <div class="notch-mini-art"></div>
+                            <div class="notch-mini-bars">
+                                <div class="nm-bar"></div>
+                                <div class="nm-bar"></div>
+                                <div class="nm-bar"></div>
+                                <div class="nm-bar"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="notch-expanded-content">
                         <div class="ne-top">
@@ -369,6 +515,28 @@
         </div>
     </section>
 
+    <section class="troubleshoot">
+        <h2>Troubleshooting</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>App won't open?</h3>
+                <p>If you see a security warning, right-click the app icon in Finder and select "Open" to bypass macOS Gatekeeper.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Spotify not connecting?</h3>
+                <p>Ensure Spotify is running and you're logged in. You may need to grant SpotDock permission to control your music.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Mini Player hidden?</h3>
+                <p>Check the menu bar icon. You can toggle the visibility of the Mini Player directly from there.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Notch not responsive?</h3>
+                <p>Make sure you have "Hide Menu Bar" disabled in System Settings, or restart the app if the animation gets stuck.</p>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="footer-inner">
             <div class="logo-bottom">
@@ -390,19 +558,53 @@
         let isDragging = false;
         let startX, startY, initialX, initialY;
 
-        // MacBook Opening Animation on Scroll
-        let hasOpened = false;
+        const macWrapper = document.querySelector('.mac-wrapper');
+        // MacBook simple closing on scroll
         window.addEventListener('scroll', () => {
-            const scrollPos = window.scrollY;
-            if (scrollPos > 30 && !hasOpened) {
-                macDisplay.style.transform = 'rotateX(0deg)';
-                hasOpened = true;
+            if (window.innerWidth > 800) {
+                const scrollPos = window.scrollY;
+                const wrapperTop = macWrapper.offsetTop;
+                const wrapperHeight = macWrapper.offsetHeight;
+                
+                // Animation starts at 2% of the wrapper height and finishes at 100%
+                const startOffset = wrapperTop + (wrapperHeight * 0.02);
+                const endOffset = wrapperTop + wrapperHeight;
+                
+                let progress = 0;
+                if (scrollPos > startOffset) {
+                    progress = Math.min((scrollPos - startOffset) / (endOffset - startOffset || 1), 1);
+                }
+                
+                // Rotate forward (towards user) to close flat on keyboard
+                const lidRotation = progress * -90; 
+                macDisplay.style.transform = `rotateX(${lidRotation}deg)`;
+                
+                // Fade out as it closes
+                macDisplay.style.opacity = 1 - (progress * 0.9);
             }
         });
 
+        const notchPath = document.getElementById('notch-path');
+
+        function updateNotchPath(isExpanded) {
+            if (isExpanded) {
+                // Expanded shape with 20px wings (normalized ~0.05 of 380px)
+                // Smoother corner radius (normalized ~0.03 of 180px height)
+                notchPath.setAttribute('d', 'M 0 0 L 1 0 L 1 0.04 Q 0.95 0.04 0.95 0.12 L 0.95 0.92 Q 0.95 1 0.91 1 L 0.09 1 Q 0.05 1 0.05 0.92 L 0.05 0.12 Q 0.05 0.04 0 0.04 Z');
+            } else {
+                // Collapsed shape with 20px wings (normalized ~0.09 of 210px)
+                // Tighter corner radius for the mini pill
+                notchPath.setAttribute('d', 'M 0 0 L 1 0 L 1 0.12 Q 0.9 0.12 0.9 0.35 L 0.9 0.85 Q 0.9 1 0.8 1 L 0.2 1 Q 0.1 1 0.1 0.85 L 0.1 0.35 Q 0.1 0.12 0 0.12 Z');
+            }
+        }
+
+        // Initialize path
+        updateNotchPath(false);
+
         notch.addEventListener('click', (e) => {
             if (e.target.closest('.ne-btns') || e.target.closest('.ne-vol')) return;
-            notch.classList.toggle('expanded');
+            const expanded = notch.classList.toggle('expanded');
+            updateNotchPath(expanded);
         });
 
         menuToggle.addEventListener('click', () => {
